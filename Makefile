@@ -17,7 +17,7 @@ $(PROJ_NAME): $(OBJECTS) ./objects/main.o
 ./objects/%.o: ./source/%.c ./headers/%.h
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-./objects/main.o: ./source/main.c $(C_HEADERS)
+./objects/main.o: main.c $(C_HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
