@@ -13,16 +13,39 @@ struct ForwardListIterator {
 };
 
 
-void forward_list_destroy(ForwardList *l)
+ForwardList *forward_list_construct()
+{
+    ForwardList *l = (ForwardList *)malloc(sizeof(ForwardList));
+
+    l->head = NULL;
+    l->size = 0;
+
+    return l;
+}
+
+void forward_list_destroy(ForwardList *l, int path)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
+    Node *n;
+
+    if (path == PATH_COL)
+    {
+        forward_list_iterator_destroy(it);
+        free(l);
+        return;
+    }
 
     while (!forward_list_iterator_is_over(it))
     {
-        
+        n = it->current;
+        forward_list_next(it, path);
+        node_destroy(n);
 
-        forward_list_next(it, PATH_LIN);
+        l->head = it->current;
     }
+
+    forward_list_iterator_destroy(it);
+    free(l);
 }
 
 

@@ -22,13 +22,21 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
     m->qtd_col = qtd_col;
     m->qtd_lin = qtd_lin;
 
+    for (int i = 0; i < m->qtd_lin; i++)
+        m->lines[i] = forward_list_construct();
+    for (int i = 0; i < m->qtd_col; i++)
+        m->columns[i] = forward_list_construct();
+
     return m;
 }
 
 void matriz_destroy(Matriz *m)
 {
     for (int i = 0; i < m->qtd_lin; i++)
-        forward_list_destroy(m->lines[i]);        
+        forward_list_destroy(m->lines[i], PATH_LIN);
+
+    for (int i = 0; i < m->qtd_col; i++)
+        forward_list_destroy(m->columns[i], PATH_COL);
     
     free(m->lines);
     free(m->columns);
