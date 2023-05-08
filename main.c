@@ -5,7 +5,7 @@
 
 int main()
 {
-    Matriz *m = matriz_construct(2, 2);
+    Matriz *m = matriz_construct(10, 10);
 
     matriz_destroy(m);
 
