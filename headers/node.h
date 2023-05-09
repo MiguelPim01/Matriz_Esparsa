@@ -8,7 +8,7 @@
 
 typedef struct Node Node;
 
-Node *node_construct(int lin, int col, float data, Node *next_lin, Node *next_col);
+Node *node_construct(data_type *d, Node *next_lin, Node *next_col);
 
 Node *node_next(Node *n, int path);
 

@@ -9,11 +9,11 @@ struct Node {
     Node *next_col;
 };
 
-Node *node_construct(int lin, int col, float data, Node *next_lin, Node *next_col)
+Node *node_construct(data_type *d, Node *next_lin, Node *next_col)
 {
     Node *n = (Node *)malloc(sizeof(Node));
 
-    n->data = data_type_construct(lin, col, data);
+    n->data = d;
     n->next_lin = next_lin;
     n->next_col = next_col;
 

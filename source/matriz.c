@@ -10,6 +10,7 @@ struct Matriz {
     int qtd_col;
 };
 
+
 Matriz *matriz_construct(int qtd_lin, int qtd_col)
 {
     Matriz *m = (Matriz *)malloc(sizeof(Matriz));
@@ -28,6 +29,38 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
         m->columns[i] = forward_list_construct();
 
     return m;
+}
+
+Matriz *matriz_insert_value(Matriz *m, int lin, int col, float value)
+{
+    ForwardListIterator *it_lin = forward_list_front_iterator(m->lines[lin]);
+    ForwardListIterator *it_col = forward_list_front_iterator(m->columns[col]);
+    data_type *data;
+
+    int cont = 0;
+
+    while (!forward_list_iterator_is_over(it_lin))
+    {
+        data = forward_list_next(it_lin, PATH_LIN);
+
+        if (col == data_type_col(data))
+        {
+            data_type_set(data, value);
+            forward_list_iterator_destroy(it_lin);
+            return m;
+        }
+        else if (col > data_type_col(data))
+        {
+            break;
+        }
+
+        cont++;
+    }
+
+    // inserir elemento na matriz
+
+    forward_list_iterator_destroy(it_lin);
+    forward_list_iterator_destroy(it_col);
 }
 
 void matriz_destroy(Matriz *m)
