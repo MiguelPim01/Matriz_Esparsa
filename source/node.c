@@ -20,6 +20,16 @@ Node *node_construct(data_type *d, Node *next_lin, Node *next_col)
     return n;
 }
 
+Node *node_set_next(Node *n, Node *next, int path)
+{
+    if (path == PATH_LIN)
+        n->next_lin = next;
+    else
+        n->next_col = next;
+    
+    return n;
+}
+
 Node *node_next(Node *n, int path)
 {
     if (path == PATH_LIN)

@@ -10,6 +10,13 @@ struct Matriz {
     int qtd_col;
 };
 
+struct MatrizIterator {
+    ForwardList *current_lin;
+    ForwardList *current_col;
+    int lin;
+    int col;
+};
+
 
 Matriz *matriz_construct(int qtd_lin, int qtd_col)
 {
@@ -31,36 +38,56 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
     return m;
 }
 
-Matriz *matriz_insert_value(Matriz *m, int lin, int col, float value)
+void matriz_print_esparso(Matriz *m)
 {
-    ForwardListIterator *it_lin = forward_list_front_iterator(m->lines[lin]);
-    ForwardListIterator *it_col = forward_list_front_iterator(m->columns[col]);
-    data_type *data;
+    MatrizIterator *it = matriz_iterator_create(m);
 
-    int cont = 0;
-
-    while (!forward_list_iterator_is_over(it_lin))
+    while (!matriz_iterator_line_is_over(it))
     {
-        data = forward_list_next(it_lin, PATH_LIN);
+        forward_list_print_esparso(it->current_lin);
 
-        if (col == data_type_col(data))
-        {
-            data_type_set(data, value);
-            forward_list_iterator_destroy(it_lin);
-            return m;
-        }
-        else if (col > data_type_col(data))
-        {
-            break;
-        }
-
-        cont++;
+        matriz_iterator_next_line(it, m);
     }
 
-    // inserir elemento na matriz
+    matriz_iterator_destroy(it);
+}
 
-    forward_list_iterator_destroy(it_lin);
-    forward_list_iterator_destroy(it_col);
+Matriz *matriz_atribuir(Matriz *m, int lin, int col, float value)
+{
+    data_type *data = matriz_find_position(m, lin, col);
+    int ind_lin, ind_col;
+
+    if (lin > m->qtd_lin || lin <= 0 || col <= 0 || col > m->qtd_col)
+    {
+        printf("Erro: Indice nao existe na matriz\n");
+        return m;
+    }
+
+    if (data == NULL)
+    {
+        data = data_type_construct(lin, col, value);
+        Node *n = node_construct(data, NULL, NULL);
+        
+
+        ind_lin = forward_list_insertion_index(m->lines[lin-1], col, PATH_LIN);
+        ind_col = forward_list_insertion_index(m->columns[col-1], lin, PATH_COL);
+
+        forward_list_insert(m->lines[lin-1], n, ind_lin, PATH_LIN);
+        forward_list_insert(m->columns[col-1], n, ind_col, PATH_COL);
+    }
+    else
+    {
+        data_type_atribui_value(data, value);
+    }
+
+    return m;
+}
+
+data_type *matriz_find_position(Matriz *m, int lin, int col)
+{
+    data_type *data = forward_list_find(m->lines[lin-1], col);
+
+    return data;
 }
 
 void matriz_destroy(Matriz *m)
@@ -74,4 +101,71 @@ void matriz_destroy(Matriz *m)
     free(m->lines);
     free(m->columns);
     free(m);
+}
+
+// =========== ITERADOR PARA MATRIZES ===========
+
+MatrizIterator *matriz_iterator_create(Matriz *m)
+{
+    MatrizIterator *it = (MatrizIterator *)malloc(sizeof(MatrizIterator));
+
+    it->current_lin = m->lines[0];
+    it->current_col = m->columns[0];
+    it->lin = 0;
+    it->col = 0;
+
+    return it;
+}
+
+Node *matriz_iterator_next_line(MatrizIterator *it, Matriz *m)
+{
+    Node *n = forward_list_head(it->current_lin);
+
+    it->lin++;
+    if (it->lin + 1 > m->qtd_lin)
+    {
+        it->current_lin = NULL;
+        return n;
+    }
+
+    it->current_lin = m->lines[it->lin];
+
+    return n;
+}
+
+Node *matriz_iterator_next_col(MatrizIterator *it, Matriz *m)
+{
+    Node *n = forward_list_head(it->current_col);
+
+    it->col++;
+    if (it->col + 1 > m->qtd_col)
+    {
+        it->current_col = NULL;
+        return n;
+    }
+
+    it->current_col = m->columns[it->col];
+
+    return n;
+}
+
+int matriz_iterator_line_is_over(MatrizIterator *it)
+{
+    if (it->current_lin == NULL)
+        return 1;
+    
+    return 0;
+}
+
+int matriz_iterator_col_is_over(MatrizIterator *it)
+{
+    if (it->current_col == NULL)
+        return 1;
+    
+    return 0;
+}
+
+void matriz_iterator_destroy(MatrizIterator *it)
+{
+    free(it);
 }

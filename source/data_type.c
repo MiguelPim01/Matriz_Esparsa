@@ -20,7 +20,12 @@ data_type *data_type_construct(int lin, int col, float data)
     return d;
 }
 
-void data_type_set(data_type *d, float value)
+void data_type_print(data_type *d)
+{
+    printf("(%d, %d): %.1f", d->lin, d->col, d->data);
+}
+
+void data_type_atribui_value(data_type *d, float value)
 {
     d->data = value;
 }
