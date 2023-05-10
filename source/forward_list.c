@@ -32,7 +32,7 @@ void forward_list_print_esparso(ForwardList *l)
     {
         data = forward_list_iterator_next(it, PATH_LIN);
 
-        data_type_print(data);
+        data_type_print_esparso(data);
         printf("\n");
     }
 

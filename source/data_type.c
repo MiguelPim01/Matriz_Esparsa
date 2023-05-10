@@ -20,7 +20,7 @@ data_type *data_type_construct(int lin, int col, float data)
     return d;
 }
 
-void data_type_print(data_type *d)
+void data_type_print_esparso(data_type *d)
 {
     printf("(%d, %d): %.1f", d->lin, d->col, d->data);
 }

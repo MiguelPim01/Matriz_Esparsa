@@ -83,6 +83,34 @@ Matriz *matriz_atribuir(Matriz *m, int lin, int col, float value)
     return m;
 }
 
+float matriz_read_value(Matriz *m, int lin, int col)
+{
+    if (lin > m->qtd_lin || lin <= 0 || col <= 0 || col > m->qtd_col)
+    {
+        printf("Erro: Indice nao existe na matriz\n");
+        return -1;
+    }
+
+    data_type *data = matriz_find_position(m, lin, col);
+
+    if (data == NULL)
+        return 0;
+    else
+        return data_type_value(data);
+}
+
+void matriz_print_denso(Matriz *m)
+{
+    for (int i = 1; i <= m->qtd_lin; i++)
+    {
+        for (int j = 1; j <= m->qtd_col; j++)
+        {
+            printf("%.0f  ", matriz_read_value(m, i, j));
+        }
+        printf("\n");
+    }
+}
+
 data_type *matriz_find_position(Matriz *m, int lin, int col)
 {
     data_type *data = forward_list_find(m->lines[lin-1], col);

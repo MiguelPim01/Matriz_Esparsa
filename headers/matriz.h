@@ -14,7 +14,11 @@ void matriz_print_esparso(Matriz *m);
 
 Matriz *matriz_atribuir(Matriz *m, int lin, int col, float value);
 
+float matriz_read_value(Matriz *m, int lin, int col);
+
 data_type *matriz_find_position(Matriz *m, int lin, int col);
+
+void matriz_print_denso(Matriz *m);
 
 void matriz_destroy(Matriz *m);
 
