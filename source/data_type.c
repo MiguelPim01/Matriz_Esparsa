@@ -9,38 +9,38 @@ struct data_type {
     float data;
 };
 
-data_type *data_type_construct(int lin, int col, float data)
+data_type *data_type_construct(int lin, int col, float value)
 {
     data_type *d = (data_type *)malloc(sizeof(data_type));
 
     d->col = col;
     d->lin = lin;
-    d->data = data;
+    d->data = value;
 
     return d;
-}
+} // O(1): Pois aloca apenas um espaço para data_type, faz atribuições diretas e retorna um ponteiro
 
 void data_type_print_esparso(data_type *d)
 {
     printf("(%d, %d): %.1f", d->lin, d->col, d->data);
-}
+} // O(1): Apenas printa os valores de data_type na tela
 
 void data_type_atribui_value(data_type *d, float value)
 {
     d->data = value;
-}
+} // O(1): Faz uma atribuição e encerra a função
 
 float data_type_value(data_type *d)
 {
     return d->data;
-}
+} // O(1): Apenas retorna um valor
 
 int data_type_col(data_type *d)
 {
     return d->col;
-}
+} // O(1): Apenas retorna um valor
 
 void data_type_destroy(data_type *d)
 {
     free(d);
-}
+} // O(1): Da free() no ponteiro de data_type
