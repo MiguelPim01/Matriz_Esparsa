@@ -48,6 +48,8 @@ void data_type_atribui_value(data_type *d, float value);
  */
 float data_type_value(data_type *d);
 
+int data_type_lin(data_type *d);
+
 /**
  * @brief Retorna a coluna que está em data_type
  * @param d

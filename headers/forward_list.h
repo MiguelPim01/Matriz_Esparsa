@@ -20,6 +20,8 @@ void forward_list_push_front(ForwardList *l, Node *n, int path);
 
 data_type *forward_list_find(ForwardList *l, int col);
 
+void forward_list_multiply_escalar(ForwardList *l, float n);
+
 Node *forward_list_head(ForwardList *l);
 
 void forward_list_destroy(ForwardList *l, int path);

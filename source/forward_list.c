@@ -114,6 +114,20 @@ data_type *forward_list_find(ForwardList *l, int col)
     return NULL;
 }
 
+void forward_list_multiply_escalar(ForwardList *l, float n)
+{
+    ForwardListIterator *it = forward_list_front_iterator(l);
+    data_type *data;
+
+    while (!forward_list_iterator_is_over(it))
+    {
+        data = forward_list_iterator_next(it, PATH_LIN);
+
+        data_type_atribui_value(data, data_type_value(data)*n);
+    }
+    forward_list_iterator_destroy(it);
+}
+
 Node *forward_list_head(ForwardList *l)
 {
     return l->head;
