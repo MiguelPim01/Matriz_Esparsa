@@ -126,7 +126,30 @@ Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
 
 Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
 {
+    if (m1->qtd_col != m2->qtd_lin)
+    {
+        printf("Erro: Nao é possivel multiplicar as duas matrizes!\n");
+        return NULL;
+    }
 
+    Matriz *mr = matriz_construct(m1->qtd_lin, m2->qtd_col);
+    float value = 0;
+
+    for (int i = 0; i < m1->qtd_lin; i++) // anda nas linhas de m1
+    {
+        for (int j = 0; j < m2->qtd_col; j++) // anda nas colunas de m2
+        {
+            for (int q = 0; q < m1->qtd_col; q++) // anda por cada ponto da linha m1 e cada ponto da coluna de m2
+            {
+                value += matriz_read_value(m1, i, q)*matriz_read_value(m2, q, j);
+            }
+
+            matriz_atribuir(mr, i, j, value);
+            value = 0;
+        }
+    }
+
+    return mr;
 }
 
 Matriz *matriz_add(Matriz *m1, Matriz *m2)
