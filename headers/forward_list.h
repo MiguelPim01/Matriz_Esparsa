@@ -20,6 +20,8 @@ void forward_list_push_front(ForwardList *l, Node *n, int path);
 
 data_type *forward_list_find(ForwardList *l, int col);
 
+data_type *forward_list_pop_index(ForwardList *l_lin, ForwardList *l_col, int i_lin, int i_col);
+
 void forward_list_multiply_escalar(ForwardList *l, float n);
 
 Node *forward_list_head(ForwardList *l);

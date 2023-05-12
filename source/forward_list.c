@@ -50,9 +50,8 @@ void forward_list_insert(ForwardList *l, Node *n, int i, int path)
     else 
     {
         for (int q = 0; q < i-1; q++)
-        {
             forward_list_iterator_next(it, path);
-        }
+        
 
         n = node_set_next(n, node_next(it->current, path), path);
         it->current = node_set_next(it->current, n, path);
@@ -81,7 +80,7 @@ int forward_list_insertion_index(ForwardList *l, int i, int path)
     {
         data = forward_list_iterator_next(it, path);
 
-        if (data_type_col(data) > i)
+        if (data_type_col(data) >= i)
         {
             forward_list_iterator_destroy(it);
             return index;
@@ -112,6 +111,67 @@ data_type *forward_list_find(ForwardList *l, int col)
     forward_list_iterator_destroy(it);
 
     return NULL;
+}
+
+data_type *forward_list_pop_index(ForwardList *l_lin, ForwardList *l_col, int i_lin, int i_col)
+{
+    ForwardListIterator *it_lin = forward_list_front_iterator(l_lin), *it_col = forward_list_front_iterator(l_col);
+    data_type *data;
+    Node *n;
+    
+    if (i_lin == 0 || i_col == 0) // algum dos dois sera pop_front
+    {
+        if (!i_lin && i_col) // indice da linha é zero mas coluna nao
+        {
+            for (int q = 0; q < i_col-1; q++)
+                forward_list_iterator_next(it_col, PATH_COL);
+            
+            n = l_lin->head;
+
+            it_col->current = node_set_next(it_col->current, node_next(n, PATH_COL), PATH_COL);
+            l_lin->head = node_next(n, PATH_LIN);
+        }
+        else if (i_lin && !i_col) // indice da coluna é zero mas linha nao
+        {
+            for (int q = 0; q < i_lin-1; q++)
+                forward_list_iterator_next(it_lin, PATH_LIN);
+            
+            n = l_col->head;
+
+            it_lin->current = node_set_next(it_lin->current, node_next(n, PATH_LIN), PATH_LIN);
+            l_col->head = node_next(n, PATH_COL);
+        }
+        else // indice de ambos é zero
+        {
+            n = l_lin->head;
+
+            l_lin->head = node_next(n, PATH_LIN);
+            l_col->head = node_next(n, PATH_COL);
+        }
+    }
+    else
+    {
+        for (int q = 0; q < i_col-1; q++)
+            forward_list_iterator_next(it_col, PATH_COL);
+
+        for (int q = 0; q < i_lin-1; q++)
+            forward_list_iterator_next(it_lin, PATH_LIN);
+        
+        n = node_next(it_lin->current, PATH_LIN);
+
+        it_lin->current = node_set_next(it_lin->current, node_next(n, PATH_LIN), PATH_LIN);
+        it_col->current = node_set_next(it_col->current, node_next(n, PATH_COL), PATH_COL);
+    }
+    forward_list_iterator_destroy(it_lin);
+    forward_list_iterator_destroy(it_col);
+
+    data = node_value(n);
+    node_destroy(n);
+
+    l_col->size--;
+    l_lin->size--;
+
+    return data;
 }
 
 void forward_list_multiply_escalar(ForwardList *l, float n)

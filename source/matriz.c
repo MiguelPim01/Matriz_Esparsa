@@ -78,7 +78,15 @@ void matriz_atribuir(Matriz *m, int lin, int col, float value)
     }
     else
     {
-        data_type_atribui_value(data, value);
+        if (value == 0)
+        {
+            ind_lin = forward_list_insertion_index(m->lines[lin], col+1, PATH_LIN);
+            ind_col = forward_list_insertion_index(m->columns[col], lin+1, PATH_COL);
+
+            forward_list_pop_index(m->lines[lin], m->columns[col], ind_lin, ind_col);
+        }
+        else
+            data_type_atribui_value(data, value);
     }
 }
 

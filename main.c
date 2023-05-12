@@ -22,6 +22,7 @@ int main()
     Matriz *m3 = matriz_add(m1, m2);
 
     matriz_print_denso(m1);
+    matriz_print_esparso(m1);
     printf("\n");
     matriz_print_denso(m2);
     printf("\n");
