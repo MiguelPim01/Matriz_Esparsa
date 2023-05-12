@@ -96,6 +96,44 @@ Matriz *matriz_multiply_escalar(Matriz *m, float n)
     return mr;
 }
 
+Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
+{
+    if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
+    {
+        printf("Erro: Matrizes nao tem dimensoes iguais! (matriz_multiply_point_by_point)\n");
+        return NULL;
+    }
+
+    Matriz *mr = matriz_construct(m1->qtd_lin, m1->qtd_col);
+    float value1, value2;
+
+    for (int i = 0; i < m1->qtd_lin; i++)
+    {
+        for (int j = 0; j < m1->qtd_col; j++)
+        {
+            value1 = matriz_read_value(m1, i, j);
+            value2 = matriz_read_value(m2, i, j);
+
+            if (!value1 || !value2)
+                continue;
+
+            matriz_atribuir(mr, i, j, value1*value2);
+        }
+    }
+
+    return mr;
+}
+
+Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
+{
+
+}
+
+Matriz *matriz_add(Matriz *m1, Matriz *m2)
+{
+
+}
+
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)
