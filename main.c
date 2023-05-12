@@ -19,7 +19,7 @@ int main()
 
     Matriz *m2 = matriz_multiply_escalar(m1, 9);
 
-    Matriz *m3 = matriz_multiply(m1, m2);
+    Matriz *m3 = matriz_add(m1, m2);
 
     matriz_print_denso(m1);
     printf("\n");

@@ -143,6 +143,8 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
             {
                 value += matriz_read_value(m1, i, q)*matriz_read_value(m2, q, j);
             }
+            if (value == 0)
+                continue;
 
             matriz_atribuir(mr, i, j, value);
             value = 0;
@@ -154,7 +156,29 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
 
 Matriz *matriz_add(Matriz *m1, Matriz *m2)
 {
+    if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
+    {
+        printf("Erro: Nao é possivel somar as duas matrizes!\n");
+        return NULL;
+    }
 
+    Matriz *mr = matriz_construct(m1->qtd_lin, m1->qtd_col);
+    float value = 0;
+
+    for (int i = 0; i < m1->qtd_lin; i++)
+    {
+        for (int j = 0; j < m1->qtd_col; j++)
+        {
+            value = matriz_read_value(m1, i, j) + matriz_read_value(m2, i, j);
+
+            if (value == 0)
+                continue;
+
+            matriz_atribuir(mr, i, j, value);
+        }
+    }
+
+    return mr;
 }
 
 float matriz_read_value(Matriz *m, int lin, int col)
