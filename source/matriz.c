@@ -189,6 +189,26 @@ Matriz *matriz_add(Matriz *m1, Matriz *m2)
     return mr;
 }
 
+Matriz *matriz_transposta(Matriz *m)
+{
+    Matriz *mr = matriz_copy(m);
+    ForwardList **lines = mr->lines, *l;
+    mr->lines = mr->columns;
+    mr->columns = lines;
+
+    MatrizIterator *it = matriz_iterator_create(mr);
+
+    while (!matriz_iterator_line_is_over(it))
+    {
+        l = matriz_iterator_next_line(it, mr);
+
+        forward_list_swap_nodes(l);
+    }
+    matriz_iterator_destroy(it);
+
+    return mr;
+}
+
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)

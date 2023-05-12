@@ -60,6 +60,8 @@ int data_type_lin(data_type *d);
  */
 int data_type_col(data_type *d);
 
+void data_type_swap_position(data_type *d);
+
 /**
  * @brief Libera o espaço alocado na memoria de data_type
  * @param d

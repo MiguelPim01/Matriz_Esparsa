@@ -22,6 +22,8 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2);
 
 Matriz *matriz_add(Matriz *m1, Matriz *m2);
 
+Matriz *matriz_transposta(Matriz *m);
+
 float matriz_read_value(Matriz *m, int lin, int col);
 
 data_type *matriz_find_position(Matriz *m, int lin, int col);

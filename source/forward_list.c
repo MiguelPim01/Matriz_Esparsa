@@ -188,6 +188,19 @@ void forward_list_multiply_escalar(ForwardList *l, float n)
     forward_list_iterator_destroy(it);
 }
 
+void forward_list_swap_nodes(ForwardList *l)
+{
+    ForwardListIterator *it = forward_list_front_iterator(l);
+
+    while (!forward_list_iterator_is_over(it))
+    {
+        node_swap_nexts(it->current);
+
+        forward_list_iterator_next(it, PATH_LIN);
+    }
+    forward_list_iterator_destroy(it);
+}
+
 Node *forward_list_head(ForwardList *l)
 {
     return l->head;

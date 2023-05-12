@@ -51,6 +51,13 @@ int data_type_col(data_type *d)
     return d->col;
 }
 
+void data_type_swap_position(data_type *d)
+{
+    int a = d->lin;
+    d->lin = d->col;
+    d->col = a;
+}
+
 // O(1): Da free() no ponteiro de data_type
 void data_type_destroy(data_type *d)
 {

@@ -59,6 +59,8 @@ Node *node_next(Node *n, int path);
  */
 data_type *node_value(Node *n);
 
+void node_swap_nexts(Node *n);
+
 /**
  * @brief Libera o espaço alocado na memoria de node
  * @param n

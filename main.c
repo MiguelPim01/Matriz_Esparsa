@@ -17,7 +17,7 @@ int main()
         matriz_atribuir(m1, lin, col, valor);
     }
 
-    Matriz *m2 = matriz_multiply_escalar(m1, 9);
+    Matriz *m2 = matriz_transposta(m1);
 
     Matriz *m3 = matriz_add(m1, m2);
 
@@ -25,8 +25,10 @@ int main()
     matriz_print_esparso(m1);
     printf("\n");
     matriz_print_denso(m2);
+    matriz_print_esparso(m2);
     printf("\n");
     matriz_print_denso(m3);
+    matriz_print_esparso(m3);
 
     matriz_destroy(m1);
     matriz_destroy(m2);

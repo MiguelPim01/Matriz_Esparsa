@@ -47,6 +47,15 @@ data_type *node_value(Node *n)
     return n->data;
 }
 
+void node_swap_nexts(Node *n)
+{
+    Node *n_aux = n->next_lin;
+    n->next_lin = n->next_col;
+    n->next_col = n_aux;
+
+    data_type_swap_position(n->data);
+}
+
 // O(1): Libera o espaço na memoria de data_type que é uma função O(1) e da free no ponteiro de n
 void node_destroy(Node *n)
 {

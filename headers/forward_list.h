@@ -24,6 +24,8 @@ data_type *forward_list_pop_index(ForwardList *l_lin, ForwardList *l_col, int i_
 
 void forward_list_multiply_escalar(ForwardList *l, float n);
 
+void forward_list_swap_nodes(ForwardList *l);
+
 Node *forward_list_head(ForwardList *l);
 
 void forward_list_destroy(ForwardList *l, int path);
