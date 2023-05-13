@@ -66,6 +66,9 @@ void matriz_atribuir(Matriz *m, int lin, int col, float value)
 
     if (data == NULL)
     {
+        if (value == 0)
+            return;
+
         data = data_type_construct(lin+1, col+1, value);
         Node *n = node_construct(data, NULL, NULL);
         
@@ -195,6 +198,8 @@ Matriz *matriz_transposta(Matriz *m)
     ForwardList **lines = mr->lines, *l;
     mr->lines = mr->columns;
     mr->columns = lines;
+    mr->qtd_lin = m->qtd_col;
+    mr->qtd_col = m->qtd_lin;
 
     MatrizIterator *it = matriz_iterator_create(mr);
 
@@ -205,6 +210,58 @@ Matriz *matriz_transposta(Matriz *m)
         forward_list_swap_nodes(l);
     }
     matriz_iterator_destroy(it);
+
+    return mr;
+}
+
+Matriz *matriz_swap_lin(Matriz *m, int lin1, int lin2)
+{
+    Matriz *mr = matriz_copy(m);
+    float value;
+
+    if (lin1 < 0 || lin1 + 1 > m->qtd_lin || lin2 < 0 || lin2 + 1 > m->qtd_lin)
+    {
+        printf("Erro: Linhas passadas nao existem na matriz!\n");
+        return mr;
+    }
+
+    if (lin1 == lin2)
+        return mr;
+    
+    for (int j = 0; j < m->qtd_col; j++)
+    {
+        value = matriz_read_value(m, lin1, j);
+        matriz_atribuir(mr, lin2, j, value);
+
+        value = matriz_read_value(m, lin2, j);
+        matriz_atribuir(mr, lin1, j, value);
+    }
+
+    return mr;
+}
+
+Matriz *matriz_swap_col(Matriz *m, int col1, int col2)
+{
+    Matriz *mr = matriz_copy(m);
+    float value;
+
+    if (col1 < 0 || col1 + 1 > m->qtd_col || col2 < 0 || col2 + 1 > m->qtd_col)
+    {
+        printf("Erro: Colunas passadas nao existem na matriz!\n");
+        return mr;
+    }
+
+    if (col1 == col2)
+        return mr;
+    
+    for (int j = 0; j < m->qtd_col; j++)
+    {
+        value = matriz_read_value(m, j, col1);
+        matriz_atribuir(mr, j, col2, value);
+
+        value = matriz_read_value(m, j, col2);
+        matriz_atribuir(mr, j, col1, value);
+    }
 
     return mr;
 }

@@ -80,10 +80,21 @@ int forward_list_insertion_index(ForwardList *l, int i, int path)
     {
         data = forward_list_iterator_next(it, path);
 
-        if (data_type_col(data) >= i)
+        if (path == PATH_LIN)
         {
-            forward_list_iterator_destroy(it);
-            return index;
+            if (data_type_col(data) >= i)
+            {
+                forward_list_iterator_destroy(it);
+                return index;
+            }
+        }
+        else 
+        {
+            if (data_type_lin(data) >= i)
+            {
+                forward_list_iterator_destroy(it);
+                return index;
+            }
         }
 
         index++;

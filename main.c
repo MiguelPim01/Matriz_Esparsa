@@ -4,11 +4,13 @@
 #include "headers/matriz.h"
 
 int main()
-{
-    Matriz *m1 = matriz_construct(3, 3);
-    
+{   
     float valor;
     int lin, col;
+
+    scanf("%d %d", &lin, &col);
+
+    Matriz *m1 = matriz_construct(lin, col);
 
     while (scanf("%f", &valor) == 1)
     {
@@ -17,9 +19,9 @@ int main()
         matriz_atribuir(m1, lin, col, valor);
     }
 
-    Matriz *m2 = matriz_transposta(m1);
+    Matriz *m2 = matriz_swap_col(m1, 2, 0);
 
-    Matriz *m3 = matriz_add(m1, m2);
+    Matriz *m3 = matriz_multiply_point_by_point(m1, m2);
 
     matriz_print_denso(m1);
     matriz_print_esparso(m1);
