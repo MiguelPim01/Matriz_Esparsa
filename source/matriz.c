@@ -266,13 +266,43 @@ Matriz *matriz_swap_col(Matriz *m, int col1, int col2)
     return mr;
 }
 
+Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin)
+{
+    int a;
+    if (lin_ini > lin_fin)
+    {
+        a = lin_ini;
+        lin_ini = lin_fin;
+        lin_fin = a;
+    }
+    if (col_ini > col_fin)
+    {
+        a = col_ini;
+        col_ini = col_fin;
+        col_fin = a;
+    }
+    
+    int lin_mr = lin_fin - lin_ini + 1, col_mr = col_fin - col_ini + 1;
+    Matriz *mr = matriz_construct(lin_mr, col_mr);
+
+    float value;
+
+    for (int i = lin_ini; i <= lin_fin; i++)
+    {
+        for (int j = col_ini; j <= col_fin; j++)
+        {
+            value = matriz_read_value(m, i, j);
+            matriz_atribuir(mr, i-lin_ini, j-col_ini, value);
+        }
+    }
+
+    return mr;
+}
+
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)
-    {
-        printf("Erro: Indice nao existe na matriz (matriz_read_value)\n");
-        return -1;
-    }
+        return 0;
 
     data_type *data = matriz_find_position(m, lin, col);
 

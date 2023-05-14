@@ -19,9 +19,9 @@ int main()
         matriz_atribuir(m1, lin, col, valor);
     }
 
-    Matriz *m2 = matriz_swap_col(m1, 2, 0);
+    Matriz *m2 = matriz_slice(m1, 2, 2, 0, 0);
 
-    Matriz *m3 = matriz_multiply_point_by_point(m1, m2);
+    Matriz *m3 = matriz_transposta(m2);
 
     matriz_print_denso(m1);
     matriz_print_esparso(m1);
