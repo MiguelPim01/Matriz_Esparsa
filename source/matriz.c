@@ -299,6 +299,46 @@ Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_f
     return mr;
 }
 
+Matriz *matriz_convolucao(Matriz *m, Matriz *kernel)
+{
+    Matriz *m_slice, *m_multiplied, *mr = matriz_construct(m->qtd_lin, m->qtd_col);
+    float value;
+    int aux_lin = (kernel->qtd_lin-1)/2, aux_col = (kernel->qtd_col-1)/2;
+
+    for (int i = 0; i < m->qtd_lin; i++)
+    {
+        for (int j = 0; j < m->qtd_col; j++)
+        {
+            m_slice = matriz_slice(m, i-aux_lin, j-aux_col, i+aux_lin, j+aux_col);
+            m_multiplied = matriz_multiply_point_by_point(m_slice, kernel);
+            value = matriz_add_all(m_multiplied);
+            matriz_atribuir(mr, i, j, value);
+
+            matriz_destroy(m_slice);
+            matriz_destroy(m_multiplied);
+        }
+    }
+
+    return mr;
+}
+
+float matriz_add_all(Matriz *m)
+{
+    MatrizIterator *it = matriz_iterator_create(m);
+    ForwardList *l;
+    float value = 0;
+
+    while (!matriz_iterator_line_is_over(it))
+    {
+        l = matriz_iterator_next_line(it, m);
+
+        value += forward_list_add_all(l);
+    }
+    matriz_iterator_destroy(it);
+
+    return value;
+}
+
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)

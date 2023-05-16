@@ -212,6 +212,23 @@ void forward_list_swap_nodes(ForwardList *l)
     forward_list_iterator_destroy(it);
 }
 
+float forward_list_add_all(ForwardList *l)
+{
+    ForwardListIterator *it = forward_list_front_iterator(l);
+    data_type *data;
+    float value = 0;
+
+    while (!forward_list_iterator_is_over(it))
+    {
+        data = forward_list_iterator_next(it, PATH_LIN);
+
+        value += data_type_value(data);
+    }
+    forward_list_iterator_destroy(it);
+
+    return value;
+}
+
 Node *forward_list_head(ForwardList *l)
 {
     return l->head;

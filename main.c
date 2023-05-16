@@ -5,36 +5,38 @@
 
 int main()
 {   
+    Matriz *m = matriz_construct(5, 5), *kernel = matriz_construct(3, 3);
+
     float valor;
     int lin, col;
-
-    scanf("%d %d", &lin, &col);
-
-    Matriz *m1 = matriz_construct(lin, col);
 
     while (scanf("%f", &valor) == 1)
     {
         scanf("%d %d", &lin, &col);
 
-        matriz_atribuir(m1, lin, col, valor);
+        matriz_atribuir(m, lin, col, valor);
+    }
+    scanf("%*[^\n]");
+    scanf("%*c");
+
+    matriz_print_denso(m);
+
+    while (scanf("%f", &valor) == 1)
+    {
+        scanf("%d %d", &lin, &col);
+
+        matriz_atribuir(kernel, lin, col, valor);
     }
 
-    Matriz *m2 = matriz_slice(m1, 2, 2, 0, 0);
+    matriz_print_denso(kernel);
 
-    Matriz *m3 = matriz_transposta(m2);
+    Matriz *result = matriz_convolucao(m, kernel);
 
-    matriz_print_denso(m1);
-    matriz_print_esparso(m1);
-    printf("\n");
-    matriz_print_denso(m2);
-    matriz_print_esparso(m2);
-    printf("\n");
-    matriz_print_denso(m3);
-    matriz_print_esparso(m3);
+    matriz_print_denso(result);
 
-    matriz_destroy(m1);
-    matriz_destroy(m2);
-    matriz_destroy(m3);
-
+    matriz_destroy(m);
+    matriz_destroy(kernel);
+    matriz_destroy(result);
+    
     return 0;
 }

@@ -30,6 +30,10 @@ Matriz *matriz_swap_col(Matriz *m, int col1, int col2);
 
 Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin);
 
+Matriz *matriz_convolucao(Matriz *m, Matriz *kernel);
+
+float matriz_add_all(Matriz *m);
+
 float matriz_read_value(Matriz *m, int lin, int col);
 
 data_type *matriz_find_position(Matriz *m, int lin, int col);

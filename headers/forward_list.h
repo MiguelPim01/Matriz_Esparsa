@@ -26,6 +26,8 @@ void forward_list_multiply_escalar(ForwardList *l, float n);
 
 void forward_list_swap_nodes(ForwardList *l);
 
+float forward_list_add_all(ForwardList *l);
+
 Node *forward_list_head(ForwardList *l);
 
 void forward_list_destroy(ForwardList *l, int path);
