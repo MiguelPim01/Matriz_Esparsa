@@ -6,12 +6,14 @@
 // Resultado esperado do programa é salvar uma matriz em formato binario para que o usuario possa usar nos demais programas
 // Aqui sao testados as funções de atribuição e de leitura e escrita de matrizes em arquivo binario
 
+// Ao rodar o programa, passar como argumento apenas o nome do arquivo binario em que a matriz sera salva, sem o ".bin"
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
         printf("Erro: Argumentos insuficientes\n");
-        printf("RUN: ./main <nome_arquivo_bin>\n");
+        printf("RUN: ./main_bin <nome_arquivo_bin>\n");
         return 1;
     }
 

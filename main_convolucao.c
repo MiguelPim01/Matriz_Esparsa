@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     if (argc < 3)
     {
         printf("Erro: Argumentos insuficientes\n");
-        printf("RUN: ./main <matriz.bin> <kernel.bin>\n");
+        printf("RUN: ./main_convolucao <matriz.bin> <kernel.bin>\n");
         return 1;
     }
 
