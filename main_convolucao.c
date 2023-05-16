@@ -7,10 +7,10 @@
 
 int main(int argc, char *argv[])
 {   
-    if (argc < 2)
+    if (argc < 3)
     {
         printf("Erro: Argumentos insuficientes\n");
-        printf("RUN: ./main <matriz.bin>\n");
+        printf("RUN: ./main <matriz.bin> <kernel.bin>\n");
         return 1;
     }
 
@@ -20,23 +20,14 @@ int main(int argc, char *argv[])
     sprintf(caminho, "%s", argv[1]);
     pFile = fopen(caminho, "rb");
     
-    float valor;
-    int lin, col;
-
-    scanf("%d %d", &lin, &col);
-    Matriz *m = matriz_construct(lin, col);
-
-    while (scanf("%f", &valor) == 1)
-    {
-        scanf("%d %d", &lin, &col);
-
-        matriz_atribuir(m, lin, col, valor);
-    }
-    scanf("%*[^\n]");
-    scanf("%*c");
+    Matriz *m = matriz_read_bin(pFile);
+    fclose(pFile);
 
     printf("Matriz m:\n");
     matriz_print_denso(m);
+
+    sprintf(caminho, "%s", argv[2]);
+    pFile = fopen(caminho, "rb");
 
     Matriz *kernel = matriz_read_bin(pFile);
 

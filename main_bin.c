@@ -3,6 +3,8 @@
 
 #include "headers/matriz.h"
 
+// Resultado esperado do programa é salvar uma matriz em formato binario para que o usuario possa usar nos demais programas
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
