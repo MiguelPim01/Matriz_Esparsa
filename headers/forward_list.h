@@ -30,6 +30,8 @@ float forward_list_add_all(ForwardList *l);
 
 Node *forward_list_head(ForwardList *l);
 
+void forward_list_save_bin(ForwardList *l, FILE *pFile);
+
 void forward_list_destroy(ForwardList *l, int path);
 
 ForwardListIterator *forward_list_front_iterator(ForwardList *l);

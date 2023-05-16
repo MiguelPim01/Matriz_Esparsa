@@ -42,6 +42,10 @@ Matriz *matriz_copy(Matriz *m);
 
 void matriz_print_denso(Matriz *m);
 
+void matriz_save_bin(Matriz *m, FILE *pFile);
+
+Matriz *matriz_read_bin(FILE *pFile);
+
 void matriz_destroy(Matriz *m);
 
 MatrizIterator *matriz_iterator_create(Matriz *m);

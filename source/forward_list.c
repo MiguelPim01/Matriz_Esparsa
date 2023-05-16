@@ -234,6 +234,22 @@ Node *forward_list_head(ForwardList *l)
     return l->head;
 }
 
+void forward_list_save_bin(ForwardList *l, FILE *pFile)
+{
+    fwrite(&l->size, sizeof(int), 1, pFile);
+
+    ForwardListIterator *it = forward_list_front_iterator(l);
+    data_type *data;
+
+    while(!forward_list_iterator_is_over(it))
+    {
+        data = forward_list_iterator_next(it, PATH_LIN);
+
+        data_type_save_bin(data, pFile);
+    }
+    forward_list_iterator_destroy(it);
+}
+
 void forward_list_destroy(ForwardList *l, int path)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);

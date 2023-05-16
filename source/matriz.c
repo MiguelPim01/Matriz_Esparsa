@@ -396,6 +396,50 @@ Matriz *matriz_copy(Matriz *m)
     return mr;
 }
 
+void matriz_save_bin(Matriz *m, FILE *pFile)
+{
+    fwrite(&m->qtd_lin, sizeof(int), 1, pFile);
+    fwrite(&m->qtd_col, sizeof(int), 1, pFile);
+
+    MatrizIterator *it = matriz_iterator_create(m);
+    ForwardList *l;
+
+    while(!matriz_iterator_line_is_over(it))
+    {
+        l = matriz_iterator_next_line(it, m);
+
+        forward_list_save_bin(l, pFile);
+    }
+    matriz_iterator_destroy(it);
+}
+
+Matriz *matriz_read_bin(FILE *pFile)
+{
+    int qtd_lin, qtd_col, lin, col, size;
+    float value;
+
+    fread(&qtd_lin, sizeof(int), 1, pFile);
+    fread(&qtd_col, sizeof(int), 1, pFile);
+
+    Matriz *mr = matriz_construct(qtd_lin, qtd_col);
+
+    for (int i = 0; i < qtd_lin; i++)
+    {
+        fread(&size, sizeof(int), 1, pFile);
+
+        for (int j = 0; j < size; j++)
+        {
+            fread(&lin, sizeof(int), 1, pFile);
+            fread(&col, sizeof(int), 1, pFile);
+            fread(&value, sizeof(float), 1, pFile);
+
+            matriz_atribuir(mr, lin-1, col-1, value);
+        }
+    }
+
+    return mr;
+}
+
 void matriz_destroy(Matriz *m)
 {
     for (int i = 0; i < m->qtd_lin; i++)

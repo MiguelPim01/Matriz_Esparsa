@@ -58,6 +58,13 @@ void data_type_swap_position(data_type *d)
     d->col = a;
 }
 
+void data_type_save_bin(data_type *d, FILE *pFile)
+{
+    fwrite(&d->lin, sizeof(int), 1, pFile);
+    fwrite(&d->col, sizeof(int), 1, pFile);
+    fwrite(&d->data, sizeof(float), 1, pFile);
+}
+
 // O(1): Da free() no ponteiro de data_type
 void data_type_destroy(data_type *d)
 {

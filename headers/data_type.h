@@ -62,6 +62,8 @@ int data_type_col(data_type *d);
 
 void data_type_swap_position(data_type *d);
 
+void data_type_save_bin(data_type *d, FILE *pFile);
+
 /**
  * @brief Libera o espaço alocado na memoria de data_type
  * @param d
