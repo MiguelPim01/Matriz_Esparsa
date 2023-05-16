@@ -40,6 +40,9 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
 
 void matriz_print_esparso(Matriz *m)
 {
+    if (m == NULL)
+        return;
+    
     MatrizIterator *it = matriz_iterator_create(m);
 
     while (!matriz_iterator_line_is_over(it))
@@ -354,6 +357,9 @@ float matriz_read_value(Matriz *m, int lin, int col)
 
 void matriz_print_denso(Matriz *m)
 {
+    if (m == NULL)
+        return;
+    
     for (int i = 0; i < m->qtd_lin; i++)
     {
         for (int j = 0; j < m->qtd_col; j++)
@@ -442,6 +448,9 @@ Matriz *matriz_read_bin(FILE *pFile)
 
 void matriz_destroy(Matriz *m)
 {
+    if (m == NULL)
+        return;
+    
     for (int i = 0; i < m->qtd_lin; i++)
         forward_list_destroy(m->lines[i], PATH_LIN);
 

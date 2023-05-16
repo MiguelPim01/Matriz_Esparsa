@@ -4,6 +4,7 @@
 #include "headers/matriz.h"
 
 // Resultado esperado do programa é salvar uma matriz em formato binario para que o usuario possa usar nos demais programas
+// Aqui sao testados as funções de atribuição e de leitura e escrita de matrizes em arquivo binario
 
 int main(int argc, char *argv[])
 {
