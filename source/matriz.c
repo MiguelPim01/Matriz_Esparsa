@@ -17,7 +17,7 @@ struct MatrizIterator {
     int col;
 };
 
-
+// O(n): Aloca dois arrays de ponteiros pra forward_list e pra cada ponteiro aloca uma forward_list.
 Matriz *matriz_construct(int qtd_lin, int qtd_col)
 {
     Matriz *m = (Matriz *)malloc(sizeof(Matriz));
@@ -38,6 +38,7 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
     return m;
 }
 
+// O(n^2): Itera pelo array de forward_lists que correspondem as linhas e utiliza a funcao O(n) forward_list_print_esparso.
 void matriz_print_esparso(Matriz *m)
 {
     if (m == NULL)
@@ -55,6 +56,7 @@ void matriz_print_esparso(Matriz *m)
     matriz_iterator_destroy(it);
 }
 
+// O(n): Nao sao realizados loopings, e todas as funções utilizadas são O(n).
 void matriz_atribuir(Matriz *m, int lin, int col, float value)
 {
     int ind_lin, ind_col;
@@ -96,6 +98,7 @@ void matriz_atribuir(Matriz *m, int lin, int col, float value)
     }
 }
 
+// O(n^3): A complexidade mais alta está na função matriz_copy, que é O(n^3)
 Matriz *matriz_multiply_escalar(Matriz *m, float n)
 {
     Matriz *mr = matriz_copy(m);
@@ -110,6 +113,7 @@ Matriz *matriz_multiply_escalar(Matriz *m, float n)
     return mr;
 }
 
+// O(n^3): Realiza dois loopings, um dentro do outro, e usa funções O(n) dentro do segundo looping
 Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
@@ -138,6 +142,7 @@ Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
     return mr;
 }
 
+// O(n^4): Realiza tres loopings, um dentro do outro, e utiliza uma função O(n) dentro do terceiro looping
 Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_col != m2->qtd_lin)
@@ -168,6 +173,7 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
     return mr;
 }
 
+// O(n^3): Realiza dois loopings, um dentro do outro, e utiliza uma função O(n) dentro do segundo looping
 Matriz *matriz_add(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
@@ -195,6 +201,7 @@ Matriz *matriz_add(Matriz *m1, Matriz *m2)
     return mr;
 }
 
+// O(n^3): A maior complexidade da função esta em matriz_copy que é O(n^3)
 Matriz *matriz_transposta(Matriz *m)
 {
     Matriz *mr = matriz_copy(m);
@@ -217,58 +224,53 @@ Matriz *matriz_transposta(Matriz *m)
     return mr;
 }
 
-Matriz *matriz_swap_lin(Matriz *m, int lin1, int lin2)
+// O(n^2): Realiza um looping e dentro dele utiliza funções O(n).
+void matriz_swap_lin(Matriz *m, int lin1, int lin2)
 {
-    Matriz *mr = matriz_copy(m);
-    float value;
+    float value1, value2;
 
     if (lin1 < 0 || lin1 + 1 > m->qtd_lin || lin2 < 0 || lin2 + 1 > m->qtd_lin)
     {
         printf("Erro: Linhas passadas nao existem na matriz!\n");
-        return mr;
+        return;
     }
 
     if (lin1 == lin2)
-        return mr;
+        return;
     
     for (int j = 0; j < m->qtd_col; j++)
     {
-        value = matriz_read_value(m, lin1, j);
-        matriz_atribuir(mr, lin2, j, value);
-
-        value = matriz_read_value(m, lin2, j);
-        matriz_atribuir(mr, lin1, j, value);
+        value1 = matriz_read_value(m, lin1, j);
+        value2 = matriz_read_value(m, lin2, j);
+        matriz_atribuir(m, lin2, j, value1);
+        matriz_atribuir(m, lin1, j, value2);
     }
-
-    return mr;
 }
 
-Matriz *matriz_swap_col(Matriz *m, int col1, int col2)
+// O(n^2): Realiza um looping e dentro dele utiliza funções O(n).
+void matriz_swap_col(Matriz *m, int col1, int col2)
 {
-    Matriz *mr = matriz_copy(m);
-    float value;
+    float value1, value2;
 
     if (col1 < 0 || col1 + 1 > m->qtd_col || col2 < 0 || col2 + 1 > m->qtd_col)
     {
         printf("Erro: Colunas passadas nao existem na matriz!\n");
-        return mr;
+        return;
     }
 
     if (col1 == col2)
-        return mr;
+        return;
     
     for (int j = 0; j < m->qtd_col; j++)
     {
-        value = matriz_read_value(m, j, col1);
-        matriz_atribuir(mr, j, col2, value);
-
-        value = matriz_read_value(m, j, col2);
-        matriz_atribuir(mr, j, col1, value);
+        value1 = matriz_read_value(m, j, col1);
+        value2 = matriz_read_value(m, j, col2);
+        matriz_atribuir(m, j, col2, value1);
+        matriz_atribuir(m, j, col1, value2);
     }
-
-    return mr;
 }
 
+// O(n^3): Realiza dois loopings, um dentro do outro, e no segundo looping utiliza funções O(n).
 Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin)
 {
     int a;
@@ -302,6 +304,7 @@ Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_f
     return mr;
 }
 
+// O(n^5): Realiza dois loopings, um dentro do outro, e no segundo looping a função de maior complexidade ultilizada é O(n^3).
 Matriz *matriz_convolucao(Matriz *m, Matriz *kernel)
 {
     Matriz *m_slice, *m_multiplied, *mr = matriz_construct(m->qtd_lin, m->qtd_col);
@@ -325,6 +328,7 @@ Matriz *matriz_convolucao(Matriz *m, Matriz *kernel)
     return mr;
 }
 
+// O(n^2): Itera sobre as linhas da matriz e utiliza uma função O(n) para cada iteração
 float matriz_add_all(Matriz *m)
 {
     MatrizIterator *it = matriz_iterator_create(m);
@@ -342,6 +346,7 @@ float matriz_add_all(Matriz *m)
     return value;
 }
 
+// O(n): Utiliza uma função O(n) e retorna um valor
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)
@@ -355,6 +360,7 @@ float matriz_read_value(Matriz *m, int lin, int col)
         return data_type_value(data);
 }
 
+// O(n^3): Realiza dois loopings, um dentro do outro, para leitura de cada indice, e utiliza uma função O(n) dentro do segundo looping
 void matriz_print_denso(Matriz *m)
 {
     if (m == NULL)
@@ -370,6 +376,7 @@ void matriz_print_denso(Matriz *m)
     }
 }
 
+// O(n): Utiliza uma função O(n) e faz atribuições
 data_type *matriz_find_position(Matriz *m, int lin, int col)
 {
     data_type *data = forward_list_find(m->lines[lin], col+1);
@@ -377,6 +384,7 @@ data_type *matriz_find_position(Matriz *m, int lin, int col)
     return data;
 }
 
+// O(n^3): Realiza dois loopings de iteração, um dentro do outro, e dentro do segundo looping utiliza uma função O(n) 
 Matriz *matriz_copy(Matriz *m)
 {
     Matriz *mr = matriz_construct(m->qtd_lin, m->qtd_col);
@@ -402,6 +410,7 @@ Matriz *matriz_copy(Matriz *m)
     return mr;
 }
 
+// O(n^2): Itera sobre as linhas da matriz e utiliza uma função O(n) para cada iteração
 void matriz_save_bin(Matriz *m, FILE *pFile)
 {
     fwrite(&m->qtd_lin, sizeof(int), 1, pFile);
@@ -419,6 +428,7 @@ void matriz_save_bin(Matriz *m, FILE *pFile)
     matriz_iterator_destroy(it);
 }
 
+// O(n^3): Realiza dois loopings, um dentro do outro, utilizando uma função O(n) dentro do segundo looping
 Matriz *matriz_read_bin(FILE *pFile)
 {
     int qtd_lin, qtd_col, lin, col, size;
@@ -446,6 +456,7 @@ Matriz *matriz_read_bin(FILE *pFile)
     return mr;
 }
 
+// O(n^2): Para cada item do array de forward_list utiliza uma função O(n).
 void matriz_destroy(Matriz *m)
 {
     if (m == NULL)
@@ -464,6 +475,7 @@ void matriz_destroy(Matriz *m)
 
 // =========== ITERADOR PARA MATRIZES ===========
 
+// O(1): Aloca 1 iterador de matriz e faz atribuições
 MatrizIterator *matriz_iterator_create(Matriz *m)
 {
     MatrizIterator *it = (MatrizIterator *)malloc(sizeof(MatrizIterator));
@@ -476,6 +488,7 @@ MatrizIterator *matriz_iterator_create(Matriz *m)
     return it;
 }
 
+// O(1): Realiza apenas atribuições
 ForwardList *matriz_iterator_next_line(MatrizIterator *it, Matriz *m)
 {
     ForwardList *l = it->current_lin;
@@ -492,6 +505,7 @@ ForwardList *matriz_iterator_next_line(MatrizIterator *it, Matriz *m)
     return l;
 }
 
+// O(1): Realiza apenas atribuições
 ForwardList *matriz_iterator_next_col(MatrizIterator *it, Matriz *m)
 {
     ForwardList *l = it->current_col;
@@ -508,6 +522,7 @@ ForwardList *matriz_iterator_next_col(MatrizIterator *it, Matriz *m)
     return l;
 }
 
+// O(1): Faz apenas uma verificação
 int matriz_iterator_line_is_over(MatrizIterator *it)
 {
     if (it->current_lin == NULL)
@@ -516,6 +531,7 @@ int matriz_iterator_line_is_over(MatrizIterator *it)
     return 0;
 }
 
+// O(1): Faz apenas uma verificação
 int matriz_iterator_col_is_over(MatrizIterator *it)
 {
     if (it->current_col == NULL)
@@ -524,6 +540,7 @@ int matriz_iterator_col_is_over(MatrizIterator *it)
     return 0;
 }
 
+// O(1): Libera um ponteiro da memoria
 void matriz_iterator_destroy(MatrizIterator *it)
 {
     free(it);

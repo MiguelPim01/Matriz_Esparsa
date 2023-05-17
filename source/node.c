@@ -47,6 +47,7 @@ data_type *node_value(Node *n)
     return n->data;
 }
 
+// O(1): Realiza atribuições e utiliza uma funcao que é O(1)
 void node_swap_nexts(Node *n)
 {
     Node *n_aux = n->next_lin;

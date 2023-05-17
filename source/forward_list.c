@@ -13,6 +13,7 @@ struct ForwardListIterator {
 };
 
 
+// O(1): Aloca espaço para uma forward_list e faz atribuições
 ForwardList *forward_list_construct()
 {
     ForwardList *l = (ForwardList *)malloc(sizeof(ForwardList));
@@ -23,6 +24,7 @@ ForwardList *forward_list_construct()
     return l;
 }
 
+// O(n): Itera sobre uma forward_list printando cada valor contido nos nodes
 void forward_list_print_esparso(ForwardList *l)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -39,6 +41,7 @@ void forward_list_print_esparso(ForwardList *l)
     forward_list_iterator_destroy(it);
 }
 
+// O(n): Itera sobre a forward_list até a posição de inserção do node
 void forward_list_insert(ForwardList *l, Node *n, int i, int path)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -62,6 +65,7 @@ void forward_list_insert(ForwardList *l, Node *n, int i, int path)
     forward_list_iterator_destroy(it);
 }
 
+// O(1): Faz uso de uma função O(1) e realiza atribuições
 void forward_list_push_front(ForwardList *l, Node *n, int path)
 {
     n = node_set_next(n, l->head, path);
@@ -70,6 +74,7 @@ void forward_list_push_front(ForwardList *l, Node *n, int path)
     l->size++;
 }
 
+// O(n): Itera sobre a lista até achar a posição de inserção
 int forward_list_insertion_index(ForwardList *l, int i, int path)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -104,6 +109,7 @@ int forward_list_insertion_index(ForwardList *l, int i, int path)
     return index;
 }
 
+// O(n): Itera sobre a lista até achar o data_type desejado
 data_type *forward_list_find(ForwardList *l, int col)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -124,6 +130,7 @@ data_type *forward_list_find(ForwardList *l, int col)
     return NULL;
 }
 
+// O(n): No pior dos casos irá iterar sobre duas forward_lists separadamente
 data_type *forward_list_pop_index(ForwardList *l_lin, ForwardList *l_col, int i_lin, int i_col)
 {
     ForwardListIterator *it_lin = forward_list_front_iterator(l_lin), *it_col = forward_list_front_iterator(l_col);
@@ -185,6 +192,7 @@ data_type *forward_list_pop_index(ForwardList *l_lin, ForwardList *l_col, int i_
     return data;
 }
 
+// O(n): Itera sobre todos os nodes atribuindo novos valores
 void forward_list_multiply_escalar(ForwardList *l, float n)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -199,6 +207,7 @@ void forward_list_multiply_escalar(ForwardList *l, float n)
     forward_list_iterator_destroy(it);
 }
 
+// O(n): Itera sobre todos os nodes alternando seus ponteiros de next
 void forward_list_swap_nodes(ForwardList *l)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -212,6 +221,7 @@ void forward_list_swap_nodes(ForwardList *l)
     forward_list_iterator_destroy(it);
 }
 
+// O(n): Itera sobre todos os nodes da lista somando seus valores
 float forward_list_add_all(ForwardList *l)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -229,11 +239,13 @@ float forward_list_add_all(ForwardList *l)
     return value;
 }
 
+// O(1): Apenas retorna um valor
 Node *forward_list_head(ForwardList *l)
 {
     return l->head;
 }
 
+// O(n): Itera sobre os nodes da forward_list salvando em binario as informações dos nodes. Obs: data_type_save_bin é O(1)
 void forward_list_save_bin(ForwardList *l, FILE *pFile)
 {
     fwrite(&l->size, sizeof(int), 1, pFile);
@@ -250,6 +262,7 @@ void forward_list_save_bin(ForwardList *l, FILE *pFile)
     forward_list_iterator_destroy(it);
 }
 
+// O(n): Itera sobre cada elemento destruindo todos os nodes
 void forward_list_destroy(ForwardList *l, int path)
 {
     ForwardListIterator *it = forward_list_front_iterator(l);
@@ -277,6 +290,7 @@ void forward_list_destroy(ForwardList *l, int path)
 
 // =========== ITERADOR PARA LISTAS ENCADEADAS ===========
 
+// O(1): Cria 1 iterador de forward_list e faz uma atribuição
 ForwardListIterator *forward_list_front_iterator(ForwardList *l)
 {
     ForwardListIterator *it = (ForwardListIterator *)malloc(sizeof(ForwardListIterator));
@@ -286,6 +300,7 @@ ForwardListIterator *forward_list_front_iterator(ForwardList *l)
     return it;
 }
 
+// O(1): Faz uso apenas de funções O(1) e realiza atribuições
 data_type *forward_list_iterator_next(ForwardListIterator *it, int path)
 {
     data_type *data = node_value(it->current);
@@ -295,6 +310,7 @@ data_type *forward_list_iterator_next(ForwardListIterator *it, int path)
     return data;
 }
 
+// O(1): Realiza apenas uma verificação
 int forward_list_iterator_is_over(ForwardListIterator *it)
 {
     if (it->current == NULL)
@@ -303,6 +319,7 @@ int forward_list_iterator_is_over(ForwardListIterator *it)
     return 0;
 }
 
+// O(1): Da free() em um ponteiro
 void forward_list_iterator_destroy(ForwardListIterator *it)
 {
     free(it);

@@ -24,9 +24,9 @@ Matriz *matriz_add(Matriz *m1, Matriz *m2);
 
 Matriz *matriz_transposta(Matriz *m);
 
-Matriz *matriz_swap_lin(Matriz *m, int lin1, int lin2);
+void matriz_swap_lin(Matriz *m, int lin1, int lin2);
 
-Matriz *matriz_swap_col(Matriz *m, int col1, int col2);
+void matriz_swap_col(Matriz *m, int col1, int col2);
 
 Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin);
 

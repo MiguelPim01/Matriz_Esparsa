@@ -30,8 +30,6 @@ int main(int argc, char *argv[])
     int swap1, swap2;
     char c;
 
-    Matriz *result = NULL;
-
     printf("Deseja trocar linhas ou colunas ?[l/c] --> ");
     scanf("%c", &c);
 
@@ -41,13 +39,13 @@ int main(int argc, char *argv[])
             printf("\nDigite as linhas a serem trocadas: ");
             scanf("%d %d", &swap1, &swap2);
 
-            result = matriz_swap_lin(m, swap1, swap2);
+            matriz_swap_lin(m, swap1, swap2);
             break;
         case 'c':
             printf("\nDigite as colunas a serem trocadas: ");
             scanf("%d %d", &swap1, &swap2);
 
-            result = matriz_swap_col(m, swap1, swap2);
+            matriz_swap_col(m, swap1, swap2);
             break;
         default:
             printf("\nErro: Valor digitado invalido\n");
@@ -55,10 +53,9 @@ int main(int argc, char *argv[])
     }
 
     printf("\nResultado:\n");
-    matriz_print_denso(result);
-    matriz_print_esparso(result);
+    matriz_print_denso(m);
+    matriz_print_esparso(m);
 
-    matriz_destroy(result);
     matriz_destroy(m);
 
     return 0;

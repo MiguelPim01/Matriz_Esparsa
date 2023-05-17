@@ -51,6 +51,7 @@ int data_type_col(data_type *d)
     return d->col;
 }
 
+// O(1): Realiza apenas atribuições
 void data_type_swap_position(data_type *d)
 {
     int a = d->lin;
@@ -58,6 +59,7 @@ void data_type_swap_position(data_type *d)
     d->col = a;
 }
 
+// O(1): Sempre escreve 3 valores int em um arquivo
 void data_type_save_bin(data_type *d, FILE *pFile)
 {
     fwrite(&d->lin, sizeof(int), 1, pFile);
