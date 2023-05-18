@@ -241,45 +241,80 @@ Matriz *matriz_add(Matriz *m1, Matriz *m2)
     }
 
     Matriz *mr = matriz_construct(m1->qtd_lin, m1->qtd_col);
-    float value = 0;
+    ForwardListIterator *it1, *it2;
+    data_type *data1 = NULL, *data2 = NULL;
 
     for (int i = 0; i < m1->qtd_lin; i++)
     {
-        for (int j = 0; j < m1->qtd_col; j++)
+        it1 = forward_list_front_iterator(m1->lines[i]);
+        it2 = forward_list_front_iterator(m2->lines[i]);
+
+        while (!(forward_list_iterator_is_over(it1) && forward_list_iterator_is_over(it2)))
         {
-            value = matriz_read_value(m1, i, j) + matriz_read_value(m2, i, j);
-
-            if (value == 0)
-                continue;
-
-            matriz_atribuir(mr, i, j, value);
+            data1 = node_value(forward_list_iterator_current(it1));
+            data2 = node_value(forward_list_iterator_current(it2));
+            
+            if (data_type_col(data1) == data_type_col(data2))
+            {
+                matriz_atribuir(mr, i, data_type_col(data1)-1, data_type_value(data1)+data_type_value(data2));
+                forward_list_iterator_next(it1, PATH_LIN);
+                forward_list_iterator_next(it2, PATH_LIN);
+            }
+            else if (data_type_col(data1) < data_type_col(data2))
+            {
+                if (data_type_col(data1) == -1)
+                {
+                    matriz_atribuir(mr, i, data_type_col(data2)-1, data_type_value(data2));
+                    forward_list_iterator_next(it2, PATH_LIN);
+                }
+                else
+                {
+                    matriz_atribuir(mr, i, data_type_col(data1)-1, data_type_value(data1));
+                    forward_list_iterator_next(it1, PATH_LIN);
+                }
+            }
+            else
+            {
+                if (data_type_col(data2) == -1)
+                {
+                    matriz_atribuir(mr, i, data_type_col(data1)-1, data_type_value(data1));
+                    forward_list_iterator_next(it1, PATH_LIN);
+                }
+                else
+                {
+                    matriz_atribuir(mr, i, data_type_col(data2)-1, data_type_value(data2));
+                    forward_list_iterator_next(it2, PATH_LIN);
+                }
+            }
         }
+
+        forward_list_iterator_destroy(it1);
+        forward_list_iterator_destroy(it2);
     }
 
     return mr;
 }
 
 // O(n^3): A maior complexidade da função esta em matriz_copy que é O(n^3)
-Matriz *matriz_transposta(Matriz *m)
+void matriz_transposta(Matriz *m)
 {
-    Matriz *mr = matriz_copy(m);
-    ForwardList **lines = mr->lines, *l;
-    mr->lines = mr->columns;
-    mr->columns = lines;
-    mr->qtd_lin = m->qtd_col;
-    mr->qtd_col = m->qtd_lin;
+    ForwardList **lines = m->lines, **columns = m->columns, *l;
+    m->lines = columns;
+    m->columns = lines;
 
-    MatrizIterator *it = matriz_iterator_create(mr);
+    int lin = m->qtd_lin, col = m->qtd_col;
+    m->qtd_lin = col;
+    m->qtd_col = lin;
+
+    MatrizIterator *it = matriz_iterator_create(m);
 
     while (!matriz_iterator_line_is_over(it))
     {
-        l = matriz_iterator_next_line(it, mr);
+        l = matriz_iterator_next_line(it, m);
 
         forward_list_swap_nodes(l);
     }
     matriz_iterator_destroy(it);
-
-    return mr;
 }
 
 // O(n^2): Realiza um looping e dentro dele utiliza funções O(n).

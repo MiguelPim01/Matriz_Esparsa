@@ -22,7 +22,7 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2);
 
 Matriz *matriz_add(Matriz *m1, Matriz *m2);
 
-Matriz *matriz_transposta(Matriz *m);
+void matriz_transposta(Matriz *m);
 
 void matriz_swap_lin(Matriz *m, int lin1, int lin2);
 

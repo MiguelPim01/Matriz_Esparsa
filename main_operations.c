@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     Matriz *mult = matriz_multiply(m1, m2);
     Matriz *mult_escalar = matriz_multiply_escalar(m1, escalar);
     Matriz *mult_ponto_a_ponto = matriz_multiply_point_by_point(m1, m2);
-    Matriz *transposta = matriz_transposta(m2);
+    matriz_transposta(m2);
 
     printf("A soma das matrizes m1 e m2:\n");
     matriz_print_denso(soma);
@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
     matriz_print_esparso(mult_ponto_a_ponto);
 
     printf("A matriz tranposta de m2:\n");
-    matriz_print_denso(transposta);
-    matriz_print_esparso(transposta);
+    matriz_print_denso(m2);
+    matriz_print_esparso(m2);
 
     matriz_destroy(m1);
     matriz_destroy(m2);
@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
     matriz_destroy(mult);
     matriz_destroy(mult_escalar);
     matriz_destroy(mult_ponto_a_ponto);
-    matriz_destroy(transposta);
 
     return 0;
 }

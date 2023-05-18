@@ -44,6 +44,8 @@ Node *node_next(Node *n, int path)
 // O(1): Libera o espaço na memoria de data_type que é uma função O(1) e da free no ponteiro de n
 data_type *node_value(Node *n)
 {
+    if (n == NULL)
+        return NULL;
     return n->data;
 }
 

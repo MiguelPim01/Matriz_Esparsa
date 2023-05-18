@@ -36,18 +36,24 @@ void data_type_atribui_value(data_type *d, float value)
 // O(1): Apenas retorna um valor
 float data_type_value(data_type *d)
 {
+    if (d == NULL)
+        return -1;
     return d->data;
 }
 
 // O(1): Apenas retorna um valor
 int data_type_lin(data_type *d)
 {
+    if (d == NULL)
+        return -1;
     return d->lin;
 }
 
 // O(1): Apenas retorna um valor
 int data_type_col(data_type *d)
 {
+    if (d == NULL)
+        return -1;
     return d->col;
 }
 
