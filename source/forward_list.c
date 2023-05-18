@@ -319,6 +319,11 @@ int forward_list_iterator_is_over(ForwardListIterator *it)
     return 0;
 }
 
+Node *forward_list_iterator_current(ForwardListIterator *it)
+{
+    return it->current;
+}
+
 // O(1): Da free() em um ponteiro
 void forward_list_iterator_destroy(ForwardListIterator *it)
 {

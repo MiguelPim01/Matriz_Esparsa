@@ -40,6 +40,8 @@ data_type *forward_list_iterator_next(ForwardListIterator *it, int path);
 
 int forward_list_iterator_is_over(ForwardListIterator *it);
 
+Node *forward_list_iterator_current(ForwardListIterator *it);
+
 void forward_list_iterator_destroy(ForwardListIterator *it);
 
 #endif

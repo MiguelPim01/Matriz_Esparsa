@@ -123,20 +123,47 @@ Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
     }
 
     Matriz *mr = matriz_construct(m1->qtd_lin, m1->qtd_col);
-    float value1, value2;
+    ForwardListIterator *it1, *it2;
+    data_type *data1 = NULL, *data2 = NULL;
 
     for (int i = 0; i < m1->qtd_lin; i++)
     {
-        for (int j = 0; j < m1->qtd_col; j++)
+        if (forward_list_head(m1->lines[i]) == NULL || forward_list_head(m2->lines[i]) == NULL)
+            continue;
+
+        it1 = forward_list_front_iterator(m1->lines[i]);
+        it2 = forward_list_front_iterator(m2->lines[i]);
+
+        while (!(forward_list_iterator_is_over(it1) && forward_list_iterator_is_over(it2)))
         {
-            value1 = matriz_read_value(m1, i, j);
-            value2 = matriz_read_value(m2, i, j);
+            data1 = node_value(forward_list_iterator_current(it1));
+            data2 = node_value(forward_list_iterator_current(it2));
 
-            if (!value1 || !value2)
-                continue;
+            if (data_type_col(data1) == data_type_col(data2))
+            {
+                matriz_atribuir(mr, i, data_type_col(data1)-1, data_type_value(data1)*data_type_value(data2));
+                forward_list_iterator_next(it1, PATH_LIN);
+                forward_list_iterator_next(it2, PATH_LIN);
+            }
+            else if (data_type_col(data1) < data_type_col(data2))
+                forward_list_iterator_next(it1, PATH_LIN);
+            else
+                forward_list_iterator_next(it2, PATH_LIN);
 
-            matriz_atribuir(mr, i, j, value1*value2);
+            if (forward_list_iterator_current(it1) == NULL && forward_list_iterator_current(it2) != NULL)
+            {
+                if (data_type_col(node_value(forward_list_iterator_current(it2))) > data_type_col(data1))
+                    break;
+            }
+            else if (forward_list_iterator_current(it2) == NULL && forward_list_iterator_current(it1) != NULL)
+            {
+                if (data_type_col(node_value(forward_list_iterator_current(it1))) > data_type_col(data2))
+                    break;
+            }
         }
+
+        forward_list_iterator_destroy(it1);
+        forward_list_iterator_destroy(it2);
     }
 
     return mr;
@@ -152,21 +179,52 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
     }
 
     Matriz *mr = matriz_construct(m1->qtd_lin, m2->qtd_col);
+    ForwardListIterator *it1, *it2;
+    data_type *data1 = NULL, *data2 = NULL;
     float value = 0;
 
     for (int i = 0; i < m1->qtd_lin; i++) // anda nas linhas de m1
     {
         for (int j = 0; j < m2->qtd_col; j++) // anda nas colunas de m2
         {
-            for (int q = 0; q < m1->qtd_col; q++) // anda por cada ponto da linha m1 e cada ponto da coluna de m2
-            {
-                value += matriz_read_value(m1, i, q)*matriz_read_value(m2, q, j);
-            }
-            if (value == 0)
+            if (forward_list_head(m1->lines[i]) == NULL || forward_list_head(m2->columns[j]) == NULL)
                 continue;
 
+            it1 = forward_list_front_iterator(m1->lines[i]);
+            it2 = forward_list_front_iterator(m2->columns[j]);
+
+            while (!(forward_list_iterator_is_over(it1) && forward_list_iterator_is_over(it2)))
+            {
+                data1 = node_value(forward_list_iterator_current(it1));
+                data2 = node_value(forward_list_iterator_current(it2));
+
+                if (data_type_col(data1) == data_type_lin(data2))
+                {
+                    value += data_type_value(data1)*data_type_value(data2);
+                    forward_list_iterator_next(it1, PATH_LIN);
+                    forward_list_iterator_next(it2, PATH_COL);
+                }
+                else if (data_type_col(data1) < data_type_lin(data2))
+                    forward_list_iterator_next(it1, PATH_LIN);
+                else
+                    forward_list_iterator_next(it2, PATH_COL);
+
+                if (forward_list_iterator_current(it1) == NULL && forward_list_iterator_current(it2) != NULL)
+                {
+                    if (data_type_lin(node_value(forward_list_iterator_current(it2))) > data_type_col(data1))
+                        break;
+                }
+                else if (forward_list_iterator_current(it2) == NULL && forward_list_iterator_current(it1) != NULL)
+                {
+                    if (data_type_col(node_value(forward_list_iterator_current(it1))) > data_type_lin(data2))
+                        break;
+                }
+            }
             matriz_atribuir(mr, i, j, value);
             value = 0;
+
+            forward_list_iterator_destroy(it1);
+            forward_list_iterator_destroy(it2);
         }
     }
 
