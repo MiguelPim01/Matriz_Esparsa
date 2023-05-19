@@ -17,7 +17,7 @@ struct MatrizIterator {
     int col;
 };
 
-// O(n): Aloca dois arrays de ponteiros pra forward_list e pra cada ponteiro aloca uma forward_list.
+// O(m+n): Aloca uma quantidade m de forward_lists para as linhas e uma quantidade n para as colunas.
 Matriz *matriz_construct(int qtd_lin, int qtd_col)
 {
     Matriz *m = (Matriz *)malloc(sizeof(Matriz));
@@ -38,7 +38,8 @@ Matriz *matriz_construct(int qtd_lin, int qtd_col)
     return m;
 }
 
-// O(n^2): Itera pelo array de forward_lists que correspondem as linhas e utiliza a funcao O(n) forward_list_print_esparso.
+// O(m*n): Anda pelas linhas da matriz e pra cada linha anda em cada node.
+// No pior dos casos terá andado todas as linhas m e pra cada linha todos os n nodes dela.
 void matriz_print_esparso(Matriz *m)
 {
     if (m == NULL)
@@ -56,7 +57,9 @@ void matriz_print_esparso(Matriz *m)
     matriz_iterator_destroy(it);
 }
 
-// O(n): Nao sao realizados loopings, e todas as funções utilizadas são O(n).
+// O(m+n): No pior dos casos a função tem que inserir na linha m e coluna n.
+// Ela tera que andar uma vez na linha e coluna para achar o indice de inserção, e depois, uma vez na linha e coluna para inserir o valor.
+// Acho que poderia ter complexidade O(2*(m+n)) também, mas olhando a definição na notação O, entendi que as constantes podem ser desconsideradas.
 void matriz_atribuir(Matriz *m, int lin, int col, float value)
 {
     int ind_lin, ind_col;
@@ -98,7 +101,8 @@ void matriz_atribuir(Matriz *m, int lin, int col, float value)
     }
 }
 
-// O(n^3): A complexidade mais alta está na função matriz_copy, que é O(n^3)
+// O(m*n*(m+n)): Anda pelas m linhas da matriz e, pra cada linha, anda pelos n nodes da matriz no pior caso.
+// Mas, a complexidade da função matriz_copy é maior que o resto da função, portanto a função terá mesma complexidade de matriz_copy.
 Matriz *matriz_multiply_escalar(Matriz *m, float n)
 {
     Matriz *mr = matriz_copy(m);
@@ -113,7 +117,8 @@ Matriz *matriz_multiply_escalar(Matriz *m, float n)
     return mr;
 }
 
-// O(n^3): Realiza dois loopings, um dentro do outro, e usa funções O(n) dentro do segundo looping
+// O(m*n*(m+n)): Anda pelas m linhas das duas matrizes simultaneamente, e pelos n nodes de cada linha.
+// Utiliza a função de atribuir pra cada node, que é O(m+n).
 Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
@@ -169,7 +174,9 @@ Matriz *matriz_multiply_point_by_point(Matriz *m1, Matriz *m2)
     return mr;
 }
 
-// O(n^4): Realiza tres loopings, um dentro do outro, e utiliza uma função O(n) dentro do terceiro looping
+// O(m*q*(n+m+q)): Anda pelas m linhas da primeira matriz. Pra cada linha da primeira, anda pelas q colunas da segunda matriz.
+// Anda pelos n nodes da linha e coluna simultaneamente.
+// Pra cada ponto da matriz utiliza a função de atribuir que é O(m+q).
 Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_col != m2->qtd_lin)
@@ -231,7 +238,8 @@ Matriz *matriz_multiply(Matriz *m1, Matriz *m2)
     return mr;
 }
 
-// O(n^3): Realiza dois loopings, um dentro do outro, e utiliza uma função O(n) dentro do segundo looping
+// O(m*n*(m+n)): Anda pelas m linhas das matrizes simultaneamente, e pelos n nodes em cada linha.
+// Utiliza a função de atribuição, que é O(m+n), pra cada node.
 Matriz *matriz_add(Matriz *m1, Matriz *m2)
 {
     if (m1->qtd_lin != m2->qtd_lin || m1->qtd_col != m2->qtd_col)
@@ -295,7 +303,7 @@ Matriz *matriz_add(Matriz *m1, Matriz *m2)
     return mr;
 }
 
-// O(n^3): A maior complexidade da função esta em matriz_copy que é O(n^3)
+// O(m*n): Anda pelas m linhas da matriz, e pelos n nodes em cada linha.
 void matriz_transposta(Matriz *m)
 {
     ForwardList **lines = m->lines, **columns = m->columns, *l;
@@ -363,7 +371,9 @@ void matriz_swap_col(Matriz *m, int col1, int col2)
     }
 }
 
-// O(n^3): Realiza dois loopings, um dentro do outro, e no segundo looping utiliza funções O(n).
+// O(m*n*(m+n)): No pior dos casos terá que retornar o slice da própria matriz.
+// Vai andar pelas m linhas, e pelas n colunas da matriz.
+// Utiliza a função de atribuir, que é O(m+n), pra cada valor.
 Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin)
 {
     int a;
@@ -397,7 +407,9 @@ Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_f
     return mr;
 }
 
-// O(n^5): Realiza dois loopings, um dentro do outro, e no segundo looping a função de maior complexidade ultilizada é O(n^3).
+// O(m*n*k^3): Anda por cada elemento da matriz (m x n), e pra cada um desses elementos, anda uma quantidade equivalente a quantidade de elementos do kernel (k x k).
+// A complexidade das funções slice e point_by_point são O(k^3). Obs: A constante que aparece foi omitida mais uma vez O(k*k(k+k)).
+// As duas funções tem as maiores complexidades no segundo looping.
 Matriz *matriz_convolucao(Matriz *m, Matriz *kernel)
 {
     Matriz *m_slice, *m_multiplied, *mr = matriz_construct(m->qtd_lin, m->qtd_col);
@@ -477,7 +489,8 @@ data_type *matriz_find_position(Matriz *m, int lin, int col)
     return data;
 }
 
-// O(n^3): Realiza dois loopings de iteração, um dentro do outro, e dentro do segundo looping utiliza uma função O(n) 
+// O(m*n*(m+n)): Anda pelas m linhas da matriz e no pior dos casos sempre anda pelas n colunas pra cada linha.
+// Para cada node é usado a funcao de atribuição, que é O(m+n).
 Matriz *matriz_copy(Matriz *m)
 {
     Matriz *mr = matriz_construct(m->qtd_lin, m->qtd_col);
@@ -549,7 +562,8 @@ Matriz *matriz_read_bin(FILE *pFile)
     return mr;
 }
 
-// O(n^2): Para cada item do array de forward_list utiliza uma função O(n).
+// O((m*n)+n): Anda pelas m linhas da matriz, e pelos n nodes de cada linha.
+// Ao fim anda pelas n colunas da matriz sem andar pelos m nodes. Outro jeito: O((m+1)*n).
 void matriz_destroy(Matriz *m)
 {
     if (m == NULL)
