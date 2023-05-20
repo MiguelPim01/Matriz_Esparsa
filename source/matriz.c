@@ -325,7 +325,8 @@ void matriz_transposta(Matriz *m)
     matriz_iterator_destroy(it);
 }
 
-// O(n^2): Realiza um looping e dentro dele utiliza funções O(n).
+// O(n*(m+n)): Para uma quantidade de colunas n da matriz a função le o valor de cada posição a atribui a posição correspondente da outra linha.
+// Para cada posição na linha da matriz é utiliza as funções de read e atribuir que são O(m+n).
 void matriz_swap_lin(Matriz *m, int lin1, int lin2)
 {
     float value1, value2;
@@ -371,9 +372,9 @@ void matriz_swap_col(Matriz *m, int col1, int col2)
     }
 }
 
-// O(m*n*(m+n)): No pior dos casos terá que retornar o slice da própria matriz.
-// Vai andar pelas m linhas, e pelas n colunas da matriz.
-// Utiliza a função de atribuir, que é O(m+n), pra cada valor.
+// O(l*n*(l+c)): Seja l a quantidade de linhas da matriz resultado e n a quantidade de colunas da matriz passada como argumento.
+// A função ira andar pelas l linhas e n colunas da matriz original.
+// Pra cada node é utilizado a função de atribuição que é O(l+c). Obs: c é a quantidade de colunas da matriz resultado.
 Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_fin)
 {
     int a;
@@ -393,15 +394,24 @@ Matriz *matriz_slice(Matriz *m, int lin_ini, int col_ini, int lin_fin, int col_f
     int lin_mr = lin_fin - lin_ini + 1, col_mr = col_fin - col_ini + 1;
     Matriz *mr = matriz_construct(lin_mr, col_mr);
 
-    float value;
+    ForwardListIterator *it;
+    data_type *data;
 
     for (int i = lin_ini; i <= lin_fin; i++)
     {
-        for (int j = col_ini; j <= col_fin; j++)
+        if (i >= 0 && i + 1 <= m->qtd_lin)
+            it = forward_list_front_iterator(m->lines[i]);
+        else
+            continue;
+
+        while (!forward_list_iterator_is_over(it))
         {
-            value = matriz_read_value(m, i, j);
-            matriz_atribuir(mr, i-lin_ini, j-col_ini, value);
+            data = forward_list_iterator_next(it, PATH_LIN);
+
+            if (data_type_col(data)-1 >= col_ini && data_type_col(data)-1 <= col_fin)
+                matriz_atribuir(mr, i-lin_ini, data_type_col(data)-1-col_ini, data_type_value(data));
         }
+        forward_list_iterator_destroy(it);
     }
 
     return mr;
@@ -433,7 +443,7 @@ Matriz *matriz_convolucao(Matriz *m, Matriz *kernel)
     return mr;
 }
 
-// O(n^2): Itera sobre as linhas da matriz e utiliza uma função O(n) para cada iteração
+// O(m*n): No pior dos casos anda sobre todas as m linhas da matriz e pra cada linha anda pelas n colunas somando todos os valores.
 float matriz_add_all(Matriz *m)
 {
     MatrizIterator *it = matriz_iterator_create(m);
@@ -451,7 +461,7 @@ float matriz_add_all(Matriz *m)
     return value;
 }
 
-// O(n): Utiliza uma função O(n) e retorna um valor
+// O(n): Utiliza a função matriz_find_position que é O(n). De resto apenas realiza tarefas em tempo constante.
 float matriz_read_value(Matriz *m, int lin, int col)
 {
     if (lin + 1 > m->qtd_lin || lin < 0 || col < 0 || col + 1 > m->qtd_col)
@@ -465,7 +475,8 @@ float matriz_read_value(Matriz *m, int lin, int col)
         return data_type_value(data);
 }
 
-// O(n^3): Realiza dois loopings, um dentro do outro, para leitura de cada indice, e utiliza uma função O(n) dentro do segundo looping
+// O(m*n^2): Anda pelas m linhas da matriz, e pra cada linha, anda pelas n colunas.
+// Pra cada valor da matriz, utiliza a função de leitura que percorre no pior dos casos as n colunas da matriz.
 void matriz_print_denso(Matriz *m)
 {
     if (m == NULL)
@@ -481,7 +492,7 @@ void matriz_print_denso(Matriz *m)
     }
 }
 
-// O(n): Utiliza uma função O(n) e faz atribuições
+// O(n): Utiliza a função forward_list_find que no pior dos casos anda por todos os n nodes da lista, sendo n a quantidade de linhas ou colunas da matriz.
 data_type *matriz_find_position(Matriz *m, int lin, int col)
 {
     data_type *data = forward_list_find(m->lines[lin], col+1);
@@ -516,7 +527,7 @@ Matriz *matriz_copy(Matriz *m)
     return mr;
 }
 
-// O(n^2): Itera sobre as linhas da matriz e utiliza uma função O(n) para cada iteração
+// O(m*n): Itera sobre as m linhas da matriz, e pra cada linha, anda sobre todos os nodes que no pior dos casos corresponde ao numero n de colunas da matriz.
 void matriz_save_bin(Matriz *m, FILE *pFile)
 {
     fwrite(&m->qtd_lin, sizeof(int), 1, pFile);
@@ -534,7 +545,8 @@ void matriz_save_bin(Matriz *m, FILE *pFile)
     matriz_iterator_destroy(it);
 }
 
-// O(n^3): Realiza dois loopings, um dentro do outro, utilizando uma função O(n) dentro do segundo looping
+// O(m*n*(m+n)): Para a quantidade m de linhas da matriz, faz n leituras pra cada linha, no pior dos casos. Sendo n a quantidade de colunas.
+// Utliza pra cada elemento da matriz a função de atribuir que é O(m+n).
 Matriz *matriz_read_bin(FILE *pFile)
 {
     int qtd_lin, qtd_col, lin, col, size;
