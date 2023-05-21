@@ -20,6 +20,12 @@ int main(int argc, char *argv[])
     sprintf(caminho, "%s", argv[1]);
     pFile = fopen(caminho, "rb");
 
+    if (pFile == NULL)
+    {
+        printf("ERRO ao abrir arquivo %s\n", caminho);
+        exit(1);
+    }
+
     Matriz *m = matriz_read_bin(pFile);
     fclose(pFile);
 

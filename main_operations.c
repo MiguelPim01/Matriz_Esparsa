@@ -21,11 +21,23 @@ int main(int argc, char *argv[])
     sprintf(caminho, "%s", argv[1]);
     pFile = fopen(caminho, "rb");
 
+    if (pFile == NULL)
+    {
+        printf("ERRO ao abrir arquivo %s\n", caminho);
+        exit(1);
+    }
+
     Matriz *m1 = matriz_read_bin(pFile);
     fclose(pFile);
 
     sprintf(caminho, "%s", argv[2]);
     pFile = fopen(caminho, "rb");
+
+    if (pFile == NULL)
+    {
+        printf("ERRO ao abrir arquivo %s\n", caminho);
+        exit(1);
+    }
 
     Matriz *m2 = matriz_read_bin(pFile);
     fclose(pFile);

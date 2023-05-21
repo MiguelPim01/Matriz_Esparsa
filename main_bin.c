@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         printf("Erro: Argumentos insuficientes\n");
-        printf("RUN: ./main_bin <nome_arquivo_bin>\n");
+        printf("RUN: ./main_bin <nome_arquivo>\n");
         return 1;
     }
 
@@ -25,18 +25,31 @@ int main(int argc, char *argv[])
     sprintf(caminho, "%s.bin", argv[1]);
     pFile = fopen(caminho, "wb");
 
+    if (pFile == NULL)
+    {
+        printf("ERRO ao abrir arquivo %s\n", caminho);
+        exit(1);
+    }
+
     float valor;
     int lin, col;
 
+    printf("Digite as dimensões da matriz (qtd linhas primeiro e qtd colunas depois): ");
     scanf("%d %d", &lin, &col);
     Matriz *m = matriz_construct(lin, col);
 
+    printf("\nDigite o valor que será inserido (digite qualquer caracter para encerrar): ");
     while (scanf("%f", &valor) == 1)
     {
+        printf("\nDigite a linha e coluna para ser inserido: ");
         scanf("%d %d", &lin, &col);
 
         matriz_atribuir(m, lin, col, valor);
+        printf("\nDigite o valor que será inserido (digite qualquer caracter para encerrar): ");
     }
+
+    matriz_print_denso(m);
+    matriz_print_esparso(m);
 
     matriz_save_bin(m, pFile);
 
