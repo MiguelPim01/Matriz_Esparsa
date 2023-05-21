@@ -326,11 +326,9 @@ void matriz_transposta(Matriz *m)
 }
 
 // O(n*(m+n)): Para uma quantidade de colunas n da matriz a função le o valor de cada posição a atribui a posição correspondente da outra linha.
-// Para cada posição na linha da matriz é utiliza as funções de read e atribuir que são O(m+n).
+// Para cada node é utilizado a função de atribuir, que é O(m+n).
 void matriz_swap_lin(Matriz *m, int lin1, int lin2)
 {
-    float value1, value2;
-
     if (lin1 < 0 || lin1 + 1 > m->qtd_lin || lin2 < 0 || lin2 + 1 > m->qtd_lin)
     {
         printf("Erro: Linhas passadas nao existem na matriz!\n");
@@ -339,21 +337,68 @@ void matriz_swap_lin(Matriz *m, int lin1, int lin2)
 
     if (lin1 == lin2)
         return;
-    
-    for (int j = 0; j < m->qtd_col; j++)
+
+    ForwardListIterator *it1, *it2;
+    data_type *data1 = NULL, *data2 = NULL;
+    float value1, value2;
+        
+    it1 = forward_list_front_iterator(m->lines[lin1]);
+    it2 = forward_list_front_iterator(m->lines[lin2]);
+
+    while (!(forward_list_iterator_is_over(it1) && forward_list_iterator_is_over(it2)))
     {
-        value1 = matriz_read_value(m, lin1, j);
-        value2 = matriz_read_value(m, lin2, j);
-        matriz_atribuir(m, lin2, j, value1);
-        matriz_atribuir(m, lin1, j, value2);
+        data1 = node_value(forward_list_iterator_current(it1));
+        data2 = node_value(forward_list_iterator_current(it2));
+        value1 = data_type_value(data1);
+        value2 = data_type_value(data2);
+
+        if (data_type_col(data1) == data_type_col(data2))
+        {
+            matriz_atribuir(m, lin1, data_type_col(data1)-1, value2);
+            matriz_atribuir(m, lin2, data_type_col(data1)-1, value1);
+            forward_list_iterator_next(it1, PATH_LIN);
+            forward_list_iterator_next(it2, PATH_LIN);
+        }
+        else if (data_type_col(data1) < data_type_col(data2))
+        {
+            if (data_type_col(data1) == -1)
+            {
+                matriz_atribuir(m, lin1, data_type_col(data2)-1, value2);
+                forward_list_iterator_next(it2, PATH_LIN);
+                matriz_atribuir(m, lin2, data_type_col(data2)-1, 0);
+            }
+            else
+            {
+                matriz_atribuir(m, lin2, data_type_col(data1)-1, value1);
+                forward_list_iterator_next(it1, PATH_LIN);
+                matriz_atribuir(m, lin1, data_type_col(data1)-1, 0);
+            }
+        }
+        else
+        {
+            if (data_type_col(data2) == -1)
+            {
+                matriz_atribuir(m, lin2, data_type_col(data1)-1, value1);
+                forward_list_iterator_next(it1, PATH_LIN);
+                matriz_atribuir(m, lin1, data_type_col(data1)-1, 0);
+            }
+            else
+            {
+                matriz_atribuir(m, lin1, data_type_col(data2)-1, value2);
+                forward_list_iterator_next(it2, PATH_LIN);
+                matriz_atribuir(m, lin2, data_type_col(data2)-1, 0);
+            }
+        }
     }
+
+    forward_list_iterator_destroy(it1);
+    forward_list_iterator_destroy(it2);
 }
 
-// O(n^2): Realiza um looping e dentro dele utiliza funções O(n).
+// O(m*(m+n)): Para uma quantidade de linhas m da matriz a função le o valor de cada posição a atribui a posição correspondente da outra coluna.
+// Para cada node é utilizado a função de atribuir, que é O(m+n).
 void matriz_swap_col(Matriz *m, int col1, int col2)
 {
-    float value1, value2;
-
     if (col1 < 0 || col1 + 1 > m->qtd_col || col2 < 0 || col2 + 1 > m->qtd_col)
     {
         printf("Erro: Colunas passadas nao existem na matriz!\n");
@@ -363,13 +408,61 @@ void matriz_swap_col(Matriz *m, int col1, int col2)
     if (col1 == col2)
         return;
     
-    for (int j = 0; j < m->qtd_col; j++)
+    ForwardListIterator *it1, *it2;
+    data_type *data1 = NULL, *data2 = NULL;
+    float value1, value2;
+        
+    it1 = forward_list_front_iterator(m->columns[col1]);
+    it2 = forward_list_front_iterator(m->columns[col2]);
+
+    while (!(forward_list_iterator_is_over(it1) && forward_list_iterator_is_over(it2)))
     {
-        value1 = matriz_read_value(m, j, col1);
-        value2 = matriz_read_value(m, j, col2);
-        matriz_atribuir(m, j, col2, value1);
-        matriz_atribuir(m, j, col1, value2);
+        data1 = node_value(forward_list_iterator_current(it1));
+        data2 = node_value(forward_list_iterator_current(it2));
+        value1 = data_type_value(data1);
+        value2 = data_type_value(data2);
+
+        if (data_type_lin(data1) == data_type_lin(data2))
+        {
+            matriz_atribuir(m, data_type_lin(data1)-1, col1, value2);
+            matriz_atribuir(m, data_type_lin(data1)-1, col2, value1);
+            forward_list_iterator_next(it1, PATH_COL);
+            forward_list_iterator_next(it2, PATH_COL);
+        }
+        else if (data_type_lin(data1) < data_type_lin(data2))
+        {
+            if (data_type_lin(data1) == -1)
+            {
+                matriz_atribuir(m, data_type_lin(data2)-1, col1, value2);
+                forward_list_iterator_next(it2, PATH_COL);
+                matriz_atribuir(m, data_type_lin(data2)-1, col2, 0);
+            }
+            else
+            {
+                matriz_atribuir(m, data_type_lin(data1)-1, col2, value1);
+                forward_list_iterator_next(it1, PATH_COL);
+                matriz_atribuir(m, data_type_lin(data1)-1, col1, 0);
+            }
+        }
+        else
+        {
+            if (data_type_lin(data2) == -1)
+            {
+                matriz_atribuir(m, data_type_lin(data1)-1, col2, value1);
+                forward_list_iterator_next(it1, PATH_COL);
+                matriz_atribuir(m, data_type_lin(data1)-1, col1, 0);
+            }
+            else
+            {
+                matriz_atribuir(m, data_type_lin(data2)-1, col1, value2);
+                forward_list_iterator_next(it2, PATH_COL);
+                matriz_atribuir(m, data_type_lin(data2)-1, col2, 0);
+            }
+        }
     }
+
+    forward_list_iterator_destroy(it1);
+    forward_list_iterator_destroy(it2);
 }
 
 // O(l*n*(l+c)): Seja l a quantidade de linhas da matriz resultado e n a quantidade de colunas da matriz passada como argumento.
